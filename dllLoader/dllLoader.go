@@ -31,17 +31,25 @@ func (dll *DllPackage) GetFunctions() []string {
 	return dll.functions
 }
 
+// GetInfo 获取别的信息
+// 传入：key
+// 传出：value
+func (dll *DllPackage) GetInfo(key string) string {
+	return dll.info[key]
+}
+
 // Execute 执行函数
 // 传入：方法名，参数
 // 传出：返回值
-func (dll *DllPackage) Execute(method string, args *[]interface{}) (*[]interface{}, error) {
+// todo
+func (dll *DllPackage) Execute(method string, args []uintptr) ([]uintptr, error) {
 	proc, err := syscall.GetProcAddress(dll.dll, method)
 	if err != nil {
 		return nil, err
 	}
-	r, _, err := syscall.SyscallN(proc, uintptr(unsafe.Pointer(args)))
-	re := (*[]interface{})(unsafe.Pointer(r))
-	return re, nil
+	r, _, err := syscall.SyscallN(proc, uintptr(unsafe.Pointer(&args)))
+	re := (*[]uintptr)(unsafe.Pointer(r))
+	return *re, nil
 }
 
 // LoadHexPackage 根据路径加载二进制包并返回句柄
@@ -85,9 +93,8 @@ func (loader *DllLoader) LoadHexPackage(dllPath string) (*DllPackage, error) {
 // ReleasePackage 释放dll包
 // 传入：二进制执行包
 // 传出：无
-func (loader *DllLoader) ReleasePackage(hexPackage *HexPackage) error {
-	dll := (*hexPackage).(DllPackage)
-	_, err := dll.Execute("release", nil)
+func (loader *DllLoader) ReleasePackage(hexPackage *loaderService.HexPackage) error {
+	_, err := (*hexPackage).Execute("release", nil)
 	if err != nil {
 		return err
 	}
