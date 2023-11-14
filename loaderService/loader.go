@@ -38,7 +38,7 @@ type HexPackageExecute interface {
 	// Execute 执行函数
 	// 传入：方法名，参数
 	// 传出：返回值
-	Execute(method string, args *[]interface{}) (*[]interface{}, error)
+	Execute(method string, args []uintptr) ([]uintptr, error)
 }
 
 type HexInfo struct {
