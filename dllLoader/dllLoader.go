@@ -43,12 +43,20 @@ func (dll *DllPackage) GetInfo(key string) string {
 // 传出：返回值
 // todo
 func (dll *DllPackage) Execute(method string, args []uintptr) ([]uintptr, error) {
-	proc, err := syscall.GetProcAddress(dll.dll, method)
+	proc, err := dll.dll.FindProc(method)
 	if err != nil {
 		return nil, err
 	}
-	r, _, err := syscall.SyscallN(proc, uintptr(unsafe.Pointer(&args)))
+	var r uintptr
+	if args == nil {
+		r, _, err = proc.Call()
+	} else {
+		r, _, err = proc.Call(uintptr(unsafe.Pointer(&args)))
+	}
 	re := (*[]uintptr)(unsafe.Pointer(r))
+	if re == nil {
+		return nil, nil
+	}
 	return *re, nil
 }
 
@@ -61,10 +69,7 @@ func (loader *DllLoader) LoadHexPackage(dllPath string) (*DllPackage, error) {
 	// dll包地址
 	dllPackagePath := dllPath + ".dll"
 	// 获取dll包句柄
-	h, err := syscall.LoadLibrary(dllPackagePath)
-	if err != nil {
-		return nil, err
-	}
+	h := syscall.MustLoadDLL(dllPackagePath)
 	// 加载json格式的dll信息
 	content, err := os.ReadFile(dllInfoPath)
 	if err != nil {
@@ -83,6 +88,11 @@ func (loader *DllLoader) LoadHexPackage(dllPath string) (*DllPackage, error) {
 		dll:       h,
 		info:      payload.Info,
 	}
+	// 是否初始化计数器
+	_, ok := loader.dllCounter[dll.name]
+	if !ok {
+		loader.dllCounter[dll.name] = 0
+	}
 	// 根据dll计数器设置一个id
 	dll.id = loader.dllCounter[dll.name]
 	// 计数器自增
@@ -94,7 +104,8 @@ func (loader *DllLoader) LoadHexPackage(dllPath string) (*DllPackage, error) {
 // 传入：二进制执行包
 // 传出：无
 func (loader *DllLoader) ReleasePackage(hexPackage *loaderService.HexPackage) error {
-	_, err := (*hexPackage).Execute("release", nil)
+	_, err := (*hexPackage).Execute("Release", nil)
+	//todo 常量化
 	if err != nil {
 		return err
 	}

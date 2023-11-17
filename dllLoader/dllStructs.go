@@ -13,7 +13,7 @@ type DllPackage struct {
 	// 其他信息
 	info map[string]string
 	// dll包
-	dll syscall.Handle
+	dll *syscall.DLL
 }
 
 // DllLoader 加载dll包的结构体
