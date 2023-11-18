@@ -50,14 +50,17 @@ func (dll *DllPackage) Execute(method string, args []uintptr) ([]uintptr, error)
 	var r uintptr
 	if args == nil {
 		r, _, err = proc.Call()
+		return nil, err
 	} else {
 		r, _, err = proc.Call(uintptr(unsafe.Pointer(&args)))
 	}
-	re := (*[]uintptr)(unsafe.Pointer(r))
-	if re == nil {
-		return nil, nil
-	}
-	return *re, nil
+	println("传出地址")
+	println(r)
+	//todo
+	k := (*[]*uintptr)(unsafe.Pointer(r))
+	println(k)
+	println(*(*k)[0])
+	return nil, nil
 }
 
 // LoadHexPackage 根据路径加载二进制包并返回句柄

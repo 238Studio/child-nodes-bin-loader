@@ -2,7 +2,6 @@ package main
 
 import "C"
 import (
-	"fmt"
 	"github.com/UniversalRobotDriveTeam/child-nodes-hdex-loader/dllLoader"
 	"unsafe"
 )
@@ -18,16 +17,21 @@ func Test0() {
 }
 
 //export Test1
-func Test1(args *uintptr) {
+func Test1(args *uintptr) uintptr {
 	println(args)
 	arg := (*[]uintptr)(unsafe.Pointer(args))
-	fmt.Printf("args:%+v", arg)
 	str := dllLoader.ParsePtrToString(uintptr(unsafe.Pointer((*arg)[0])))
-	println(str)
 	b := str + "mew"
-	re := make([]uintptr, 1)
-	re[0] = (uintptr)(unsafe.Pointer(&b))
-	println(b)
+	r := dllLoader.ParseStringToPtr(b)
+	re := make([]*uintptr, 1)
+	re[0] = &r
+	defer println("完成")
+	rep := uintptr(unsafe.Pointer(&re))
+	println("内部地址")
+	println(rep)
+	k := (*[]*uintptr)(unsafe.Pointer(rep))
+	println(*(*k)[0])
+	return rep
 }
 
 func main() {
