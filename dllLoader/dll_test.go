@@ -15,11 +15,11 @@ func TestName(t *testing.T) {
 		return
 	}
 	//hexPackage.Execute("Test0", nil)
-	execute, err := hexPackage.Execute("Test1", args)
+	var re = make([]*interface{}, 1)
+	println(re)
+	err = hexPackage.Execute("Test1", args, &re)
 	if err != nil {
 		return
 	}
 	//	re := execute[0]
-	println(execute[0])
-	println(ParsePtrToString(execute[0]))
 }

@@ -24,9 +24,23 @@ func (dll *DllPackage) GetID() int {
 	return dll.id
 }
 
+// GetFunctionsArgsTypes 获取函数传入参数类型
+// 传入：函数名
+// 传出：传入参数类型数组
+func (dll *DllPackage) GetFunctionsArgsTypes(methodName string) []string {
+	return dll.functionsArgsTypes[methodName]
+}
+
+// GetFunctionReturnTypes 获得函数返回值类型列表
+// 传入：函数名
+// 传出：返回值类型列表
+func (dll *DllPackage) GetFunctionReturnTypes(methodName string) []string {
+	return dll.functionsReturnTypes[methodName]
+}
+
 // GetFunctions 获取支持的函数列表
 // 传入：无
-// 传出：获得支持的函数名列表
+// 传出：获得支持的函数列表
 func (dll *DllPackage) GetFunctions() []string {
 	return dll.functions
 }
@@ -42,25 +56,23 @@ func (dll *DllPackage) GetInfo(key string) string {
 // 传入：方法名，参数
 // 传出：返回值
 // todo
-func (dll *DllPackage) Execute(method string, args []uintptr) ([]uintptr, error) {
+func (dll *DllPackage) Execute(method string, args []uintptr, re *[]*interface{}) error {
+	// 在dll中获得方法的句柄
 	proc, err := dll.dll.FindProc(method)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	var r uintptr
+	// 如果没有参数则直接无参调用方法
 	if args == nil {
-		r, _, err = proc.Call()
-		return nil, err
+		_, _, err = proc.Call()
+		return err
 	} else {
-		r, _, err = proc.Call(uintptr(unsafe.Pointer(&args)))
+		// 分别传入返回值指针和变量指针
+		_, _, err = proc.Call(uintptr(unsafe.Pointer(re)), uintptr(unsafe.Pointer(&args)))
 	}
-	println("传出地址")
-	println(r)
-	//todo
-	k := (*[]*uintptr)(unsafe.Pointer(r))
-	println(k)
-	println(*(*k)[0])
-	return nil, nil
+	str := (*(*re)[0]).(uintptr)
+	println(ParsePtrToString(str))
+	return nil
 }
 
 // LoadHexPackage 根据路径加载二进制包并返回句柄
@@ -85,11 +97,13 @@ func (loader *DllLoader) LoadHexPackage(dllPath string) (*DllPackage, error) {
 	}
 	// 初始化DllPackage类的name，dll
 	dll := DllPackage{
-		name:      strings.Split(path.Base(dllPackagePath), ".")[0],
-		id:        0,
-		functions: payload.Functions,
-		dll:       h,
-		info:      payload.Info,
+		name:                 strings.Split(path.Base(dllPackagePath), ".")[0],
+		id:                   0,
+		functions:            payload.Functions,
+		functionsReturnTypes: payload.FunctionsReturnTypes,
+		functionsArgsTypes:   payload.FunctionsArgsTypes,
+		dll:                  h,
+		info:                 payload.Info,
 	}
 	// 是否初始化计数器
 	_, ok := loader.dllCounter[dll.name]
@@ -107,7 +121,7 @@ func (loader *DllLoader) LoadHexPackage(dllPath string) (*DllPackage, error) {
 // 传入：二进制执行包
 // 传出：无
 func (loader *DllLoader) ReleasePackage(hexPackage *loaderService.HexPackage) error {
-	_, err := (*hexPackage).Execute("Release", nil)
+	err := (*hexPackage).Execute("Release", nil, nil)
 	//todo 常量化
 	if err != nil {
 		return err

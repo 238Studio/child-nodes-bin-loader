@@ -10,6 +10,10 @@ type DllPackage struct {
 	id int
 	// 支持的函数名
 	functions []string
+	// 函数的入参类型 函数名-入参类型表
+	functionsArgsTypes map[string][]string
+	// 函数的返回值类型表 函数名-返回值类型表
+	functionsReturnTypes map[string][]string
 	// 其他信息
 	info map[string]string
 	// dll包

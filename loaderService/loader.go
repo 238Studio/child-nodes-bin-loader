@@ -24,29 +24,47 @@ type HexPackage interface {
 	// 传入：无
 	// 传出：名字
 	GetName() string
+
 	// GetID 获取ID
 	// 传入：无
 	// 传出：ID
+
 	GetID() int
+
 	// GetFunctions 获取支持的函数列表
 	// 传入：无
 	// 传出：支持的函数列表
 	GetFunctions() []string
+
+	// GetFunctionsArgsTypes 获取函数传入参数类型
+	// 传入：函数名
+	// 传出：传入参数类型数组
+	GetFunctionsArgsTypes(methodName string) []string
+
+	// GetFunctionReturnTypes 获得函数返回值类型列表
+	// 传入：函数名
+	// 传出：返回值类型列表
+	GetFunctionReturnTypes(methodName string) []string
+
 	// GetInfo 获取别的信息
 	// 传入：key
 	// 传出：value
 	GetInfo(key string) string
 
 	// Execute 执行函数
-	// 传入：方法名，参数
-	// 传出：返回值
-	Execute(method string, args []uintptr) ([]uintptr, error)
+	// 传入：方法名，参数，返回值指针数组
+	// 传出：错误
+	Execute(method string, args []uintptr, re *[]*interface{}) error
 }
 
-// HexInfo 二进制包信息j
+// HexInfo 二进制包信息
 type HexInfo struct {
-	// 支持的函数名
+	// 支持的函数 函数名
 	Functions []string
+	// 函数的入参类型 函数名-入参类型表
+	FunctionsArgsTypes map[string][]string
+	// 函数的返回值类型表 函数名-返回值类型表
+	FunctionsReturnTypes map[string][]string
 	// info
 	Info map[string]string
 }
