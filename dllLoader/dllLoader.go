@@ -56,12 +56,13 @@ func (dll *DllPackage) GetInfo(key string) string {
 // 传入：方法名，参数
 // 传出：返回值
 // todo
-func (dll *DllPackage) Execute(method string, args []uintptr, re *[]*interface{}) error {
+func (dll *DllPackage) Execute(method string, args []uintptr, re uintptr) error {
 	// 在dll中获得方法的句柄
 	proc, err := dll.dll.FindProc(method)
 	if err != nil {
 		return err
 	}
+
 	// 如果没有参数则直接无参调用方法
 	if args == nil {
 		_, _, err = proc.Call()
@@ -70,9 +71,8 @@ func (dll *DllPackage) Execute(method string, args []uintptr, re *[]*interface{}
 		// 分别传入返回值指针和变量指针
 		_, _, err = proc.Call(uintptr(unsafe.Pointer(re)), uintptr(unsafe.Pointer(&args)))
 	}
-	str := (*(*re)[0]).(uintptr)
-	println(ParsePtrToString(str))
-	return nil
+	println("传出后")
+	return err
 }
 
 // LoadHexPackage 根据路径加载二进制包并返回句柄
@@ -121,7 +121,7 @@ func (loader *DllLoader) LoadHexPackage(dllPath string) (*DllPackage, error) {
 // 传入：二进制执行包
 // 传出：无
 func (loader *DllLoader) ReleasePackage(hexPackage *loaderService.HexPackage) error {
-	err := (*hexPackage).Execute("Release", nil, nil)
+	err := (*hexPackage).Execute("Release", nil, 0)
 	//todo 常量化
 	if err != nil {
 		return err

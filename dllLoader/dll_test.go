@@ -14,12 +14,9 @@ func TestName(t *testing.T) {
 		println(err.Error())
 		return
 	}
-	//hexPackage.Execute("Test0", nil)
-	var re = make([]*interface{}, 1)
-	println(re)
+	re := make([]string, 1)
+	re[0] = ""
 	err = hexPackage.Execute("Test1", args, &re)
-	if err != nil {
-		return
-	}
 	//	re := execute[0]
+	println(re[0])
 }

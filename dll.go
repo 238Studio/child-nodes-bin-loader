@@ -17,15 +17,16 @@ func Test0() {
 }
 
 //export Test1
-func Test1(r uintptr, args *uintptr) {
+func Test1(re uintptr, args *uintptr) uintptr {
 	arg := (*[]uintptr)(unsafe.Pointer(args))
 	str := dllLoader.ParsePtrToString(uintptr(unsafe.Pointer((*arg)[0])))
 	b := str + "mew"
-	r_ := dllLoader.ParseStringToPtr(b)
-	defer println("完成")
-	re := (*[]*interface{})(unsafe.Pointer(r))
-	println(re)
-	*(*re)[0] = r_
+	r := (*[]interface{})(unsafe.Pointer(re))
+	b1 := (interface{})(b)
+	(*r)[0] = &b1
+	println("内部")
+	println((*r)[0])
+	return uintptr(unsafe.Pointer(&re))
 }
 
 func main() {

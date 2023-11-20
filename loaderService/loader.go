@@ -54,7 +54,7 @@ type HexPackage interface {
 	// Execute 执行函数
 	// 传入：方法名，参数，返回值指针数组
 	// 传出：错误
-	Execute(method string, args []uintptr, re *[]*interface{}) error
+	Execute(method string, args []uintptr, re uintptr) error
 }
 
 // HexInfo 二进制包信息
