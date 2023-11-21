@@ -69,7 +69,7 @@ func (dll *DllPackage) Execute(method string, args []uintptr, re uintptr) error 
 		return err
 	} else {
 		// 分别传入返回值指针和变量指针
-		_, _, err = proc.Call(uintptr(unsafe.Pointer(re)), uintptr(unsafe.Pointer(&args)))
+		_, _, err = proc.Call(re, uintptr(unsafe.Pointer(&args)))
 	}
 	println("传出后")
 	return err

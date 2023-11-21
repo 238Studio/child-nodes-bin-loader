@@ -52,7 +52,7 @@ type HexPackage interface {
 	GetInfo(key string) string
 
 	// Execute 执行函数
-	// 传入：方法名，参数，返回值指针数组
+	// 传入：方法名，参数，返回值指针数组的指针
 	// 传出：错误
 	Execute(method string, args []uintptr, re uintptr) error
 }

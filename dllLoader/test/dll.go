@@ -21,11 +21,10 @@ func Test1(re uintptr, args *uintptr) uintptr {
 	arg := (*[]uintptr)(unsafe.Pointer(args))
 	str := dllLoader.ParsePtrToString(uintptr(unsafe.Pointer((*arg)[0])))
 	b := str + "mew"
-	r := (*[]interface{})(unsafe.Pointer(re))
-	b1 := (interface{})(b)
-	(*r)[0] = &b1
+	r := (*[]uintptr)(unsafe.Pointer(re))
 	println("内部")
-	println((*r)[0])
+	println(*(*string)(unsafe.Pointer((*r)[0])))
+	*(*string)(unsafe.Pointer((*r)[0])) = b
 	return uintptr(unsafe.Pointer(&re))
 }
 

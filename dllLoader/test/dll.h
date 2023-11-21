@@ -76,7 +76,7 @@ extern "C" {
 
 extern __declspec(dllexport) void Release();
 extern __declspec(dllexport) void Test0();
-extern __declspec(dllexport) GoSlice Test1(GoUintptr args);
+extern __declspec(dllexport) GoUintptr Test1(GoUintptr re, GoUintptr* args);
 
 #ifdef __cplusplus
 }
