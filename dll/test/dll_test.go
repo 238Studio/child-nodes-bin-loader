@@ -1,16 +1,17 @@
 package main
 
 import (
-	"github.com/UniversalRobotDriveTeam/child-nodes-hdex-loader/dllLoader"
 	"testing"
 	"unsafe"
+
+	"github.com/UniversalRobotDriveTeam/child-nodes-hdex-loader/dll"
 )
 
 func TestName(t *testing.T) {
 	args := make([]uintptr, 1)
 	a := "helloworld"
 	args[0] = uintptr(unsafe.Pointer(&a))
-	app := dllLoader.InitDllLoader()
+	app := dll.InitDllLoader()
 	hexPackage, err := app.LoadHexPackage("C:\\Users\\real_common_cat\\Desktop\\childNodes\\child-nodes-hex-loader\\dllLoader\\test\\dll")
 	if err != nil {
 		println(err.Error())

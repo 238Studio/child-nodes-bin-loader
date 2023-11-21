@@ -1,13 +1,14 @@
-package dllLoader
+package dll
 
 import (
 	"encoding/json"
-	"github.com/UniversalRobotDriveTeam/child-nodes-hdex-loader/loaderService"
 	"os"
 	"path"
 	"strings"
 	"syscall"
 	"unsafe"
+
+	"github.com/UniversalRobotDriveTeam/child-nodes-hdex-loader/loader"
 )
 
 // GetName 获取名字
@@ -78,7 +79,7 @@ func (dll *DllPackage) Execute(method string, args []uintptr, re uintptr) error 
 // LoadHexPackage 根据路径加载二进制包并返回句柄
 // 传入：路径
 // 传出：二进制执行包
-func (loader *DllLoader) LoadHexPackage(dllPath string) (*DllPackage, error) {
+func (dllLoader *DllLoader) LoadHexPackage(dllPath string) (*DllPackage, error) {
 	// dll包对应的描述文件地址
 	dllInfoPath := dllPath + ".json"
 	// dll包地址
@@ -90,7 +91,7 @@ func (loader *DllLoader) LoadHexPackage(dllPath string) (*DllPackage, error) {
 	if err != nil {
 		return nil, err
 	}
-	var payload loaderService.HexInfo
+	var payload loader.HexInfo
 	err = json.Unmarshal(content, &payload)
 	if err != nil {
 		return nil, err
@@ -106,21 +107,21 @@ func (loader *DllLoader) LoadHexPackage(dllPath string) (*DllPackage, error) {
 		info:                 payload.Info,
 	}
 	// 是否初始化计数器
-	_, ok := loader.dllCounter[dll.name]
+	_, ok := dllLoader.dllCounter[dll.name]
 	if !ok {
-		loader.dllCounter[dll.name] = 0
+		dllLoader.dllCounter[dll.name] = 0
 	}
 	// 根据dll计数器设置一个id
-	dll.id = loader.dllCounter[dll.name]
+	dll.id = dllLoader.dllCounter[dll.name]
 	// 计数器自增
-	loader.dllCounter[dll.name]++
+	dllLoader.dllCounter[dll.name]++
 	return &dll, err
 }
 
 // ReleasePackage 释放dll包
 // 传入：二进制执行包
 // 传出：无
-func (loader *DllLoader) ReleasePackage(hexPackage *loaderService.HexPackage) error {
+func (dllLoader *DllLoader) ReleasePackage(hexPackage *loader.HexPackage) error {
 	err := (*hexPackage).Execute("Release", nil, 0)
 	//todo 常量化
 	if err != nil {

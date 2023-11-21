@@ -1,4 +1,4 @@
-package loaderService
+package loader
 
 // Loader loader需要实现的若干功能
 // loader是一个加载本地函数的服务 它有若干个不同的实现
