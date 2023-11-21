@@ -76,7 +76,10 @@ extern "C" {
 
 extern __declspec(dllexport) void Release();
 extern __declspec(dllexport) void Test0();
-extern __declspec(dllexport) GoUintptr Test1(GoUintptr re, GoUintptr* args);
+
+// Test1 测试go传入传出 和内部操作指针
+//
+extern __declspec(dllexport) GoUintptr Test1(GoUintptr re, GoUintptr args);
 
 #ifdef __cplusplus
 }

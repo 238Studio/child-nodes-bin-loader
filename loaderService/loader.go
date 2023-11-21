@@ -57,6 +57,8 @@ type HexPackage interface {
 	Execute(method string, args []uintptr, re uintptr) error
 }
 
+// Parse
+
 // HexInfo 二进制包信息
 type HexInfo struct {
 	// 支持的函数 函数名

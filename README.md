@@ -96,3 +96,19 @@
 另外，注意到，软件包也属于机器人API的一部分，但是软件包通过组来进行了调用域上的划分。软件包可以通过中层的hex管理器来
 获取同一组内其他软件包的信息，并进行调用。
 
+## 关于一个典型的hex包调用过程
+1. 将变量转为uintptr数组，并且初始化传出返回值的指针数组。
+2. 在中层调用指定的函数，此时hex管理器会搜索并将参数传入相应函数，函数由包+函数名进行标记。
+3. hex包执行完毕，中层获得结果。
+```
+// 初始化返回值数组
+    re := make([]uintptr, 1)
+	var str = ""
+	println(&str)
+	re[0] = (uintptr)(unsafe.Pointer(&str))
+	
+// 初始化传入参数
+	args := make([]uintptr, 1)
+	a := "helloworld"
+	args[0] = uintptr(unsafe.Pointer(&a))
+```
