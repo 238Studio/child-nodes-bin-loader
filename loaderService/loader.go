@@ -61,6 +61,8 @@ type HexPackage interface {
 
 // HexInfo 二进制包信息
 type HexInfo struct {
+	// 全局唯一的名称
+	Name string
 	// 支持的函数 函数名
 	Functions []string
 	// 函数的入参类型 函数名-入参类型表

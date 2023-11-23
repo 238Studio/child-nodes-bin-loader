@@ -112,3 +112,26 @@
 	a := "helloworld"
 	args[0] = uintptr(unsafe.Pointer(&a))
 ```
+## 关于hex包附属描述信息
+hex包有一个同名，相同目录下的json文件作为其文件描述。
+一个典型的json文件是这样的。
+```
+{
+"Name":"",
+"#Name":"全局唯一的名",
+"Functions":["func0",""],
+"#Functions":"支持的函数的函数名",
+"FunctionsArgsTypes":{
+"func0":["",""],
+}
+"#FunctionsArgsTypes":"函数的入参类型 函数名-入参类型表",
+"FunctionsReturnTypes":{
+"func0":["",""],
+}
+"#FunctionsArgsTypes":"函数的返回值类型表 函数名-返回值类型表",
+}
+"Info":{
+    "item0":"",
+}
+"#Info":"其他信息"
+```
