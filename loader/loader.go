@@ -1,25 +1,25 @@
-package loaderService
+package loader
 
 // Loader loader需要实现的若干功能
 // loader是一个加载本地函数的服务 它有若干个不同的实现
 type Loader interface {
-	// LoadHexPackage 根据路径加载二进制包并返回句柄
+	// LoadBinPackage 根据路径加载二进制包并返回句柄
 	// 传入：路径
 	// 传出：二进制执行包
-	LoadHexPackage(path string) (*HexPackage, error)
+	LoadBinPackage(path string) (*BinPackage, error)
 	// ReleasePackage 释放dll包
 	// 传入：二进制执行包
 	// 传出：无
-	ReleasePackage(hexPackage *HexPackage) error
+	ReleasePackage(binPackage *BinPackage) error
 }
 
-// HexPackage 二进制可执行包
+// BinPackage 二进制可执行包
 /*
 每个包都有一个全局唯一的name
 而每个函数也是全局唯一的 其通过name和function name来断定
 函数调用直接传入和传出指针数组 其没有显式的类型检查
 */
-type HexPackage interface {
+type BinPackage interface {
 	// GetName 获取名字
 	// 传入：无
 	// 传出：名字
@@ -39,17 +39,17 @@ type HexPackage interface {
 	// GetFunctionsArgsTypes 获取函数传入参数类型
 	// 传入：函数名
 	// 传出：传入参数类型数组
-	GetFunctionsArgsTypes(methodName string) []string
+	GetFunctionsArgsTypes(methodName string) ([]string, error)
 
 	// GetFunctionReturnTypes 获得函数返回值类型列表
 	// 传入：函数名
 	// 传出：返回值类型列表
-	GetFunctionReturnTypes(methodName string) []string
+	GetFunctionReturnTypes(methodName string) ([]string, error)
 
 	// GetInfo 获取别的信息
 	// 传入：key
 	// 传出：value
-	GetInfo(key string) string
+	GetInfo(key string) (string, error)
 
 	// Execute 执行函数
 	// 传入：方法名，参数，返回值指针数组的指针
@@ -59,8 +59,8 @@ type HexPackage interface {
 
 // Parse
 
-// HexInfo 二进制包信息
-type HexInfo struct {
+// BinInfo 二进制包信息
+type BinInfo struct {
 	// 全局唯一的名称
 	Name string
 	// 支持的函数 函数名

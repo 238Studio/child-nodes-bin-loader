@@ -1,5 +1,5 @@
 
-dllLoader/test/dll.dll
-dllLoader/test/dll.go
-dllLoader/test/dll.json
-dllLoader/test/dll_test.go
+dll/test/dll.dll
+dll/test/dll.go
+dll/test/dll.json
+dll/test/dll_test.go
