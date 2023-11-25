@@ -39,17 +39,17 @@ type BinPackage interface {
 	// GetFunctionsArgsTypes 获取函数传入参数类型
 	// 传入：函数名
 	// 传出：传入参数类型数组
-	GetFunctionsArgsTypes(methodName string) []string
+	GetFunctionsArgsTypes(methodName string) ([]string, error)
 
 	// GetFunctionReturnTypes 获得函数返回值类型列表
 	// 传入：函数名
 	// 传出：返回值类型列表
-	GetFunctionReturnTypes(methodName string) []string
+	GetFunctionReturnTypes(methodName string) ([]string, error)
 
 	// GetInfo 获取别的信息
 	// 传入：key
 	// 传出：value
-	GetInfo(key string) string
+	GetInfo(key string) (string, error)
 
 	// Execute 执行函数
 	// 传入：方法名，参数，返回值指针数组的指针
