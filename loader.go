@@ -6,11 +6,11 @@ type Loader interface {
 	// LoadBinPackage 根据路径加载二进制包并返回句柄
 	// 传入：路径
 	// 传出：二进制执行包
-	LoadBinPackage(path string) (*BinPackage, error)
+	LoadBinPackage(path string) (BinPackage, error)
 	// ReleasePackage 释放dll包
 	// 传入：二进制执行包
 	// 传出：无
-	ReleasePackage(binPackage *BinPackage) error
+	ReleasePackage(binPackage BinPackage) error
 }
 
 // BinPackage 二进制可执行包
