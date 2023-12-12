@@ -3,10 +3,10 @@ package loader
 // Loader loader需要实现的若干功能
 // loader是一个加载本地函数的服务 它有若干个不同的实现
 type Loader interface {
-	// LoadBinPackage 根据路径加载二进制包并返回句柄
+	// LoadPackage 根据路径加载二进制包并返回句柄
 	// 传入：路径
 	// 传出：二进制执行包
-	LoadBinPackage(path string) (BinPackage, error)
+	LoadPackage(path string) (BinPackage, error)
 	// ReleasePackage 释放dll包
 	// 传入：二进制执行包
 	// 传出：无

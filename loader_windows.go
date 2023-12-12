@@ -86,10 +86,10 @@ func (dll *DllPackage) Execute(method string, args []uintptr, re uintptr) error 
 	return util.NewError(_const.CommonException, _const.Bin, err)
 }
 
-// LoadBinPackage 根据路径加载二进制包并返回句柄
+// LoadPackage 根据路径加载二进制包并返回句柄
 // 传入：路径
 // 传出：二进制执行包
-func (dllLoader *DllLoader) LoadBinPackage(dllPath string) (BinPackage, error) {
+func (dllLoader *DllLoader) LoadPackage(dllPath string) (BinPackage, error) {
 	// dll包对应的描述文件地址
 	dllInfoPath := dllPath + ".json"
 	// dll包地址
