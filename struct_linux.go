@@ -1,4 +1,4 @@
-package so
+package loader
 
 import "plugin"
 

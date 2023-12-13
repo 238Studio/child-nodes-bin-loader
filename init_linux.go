@@ -1,4 +1,4 @@
-package so
+package loader
 
 // InitLoader 初始化so加载器
 // 传入参数：无
