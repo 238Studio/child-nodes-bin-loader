@@ -86,25 +86,32 @@ func (dll *DllPackage) Execute(method string, args []uintptr, re uintptr) error 
 	return util.NewError(_const.CommonException, _const.Bin, err)
 }
 
+// GetPackage 获取包
+// 传入：name，id
+// 传出：包
+func (dllLoader *DllLoader) GetPackage(name string, id int) BinPackage {
+	return dllLoader.Dlls[name][id]
+}
+
 // LoadPackage 根据路径加载二进制包并返回句柄
 // 传入：路径
 // 传出：二进制执行包
-func (dllLoader *DllLoader) LoadPackage(dllPath string) (BinPackage, error) {
+func (dllLoader *DllLoader) LoadPackage(path string) (name string, id int, err error) {
 	// dll包对应的描述文件地址
-	dllInfoPath := dllPath + ".json"
+	dllInfoPath := path + ".json"
 	// dll包地址
-	dllPackagePath := dllPath + ".dll"
+	dllPackagePath := path + ".dll"
 	// 获取dll包句柄
 	h := syscall.MustLoadDLL(dllPackagePath)
 	// 加载json格式的dll信息
 	content, err := os.ReadFile(dllInfoPath)
 	if err != nil {
-		return nil, util.NewError(_const.CommonException, _const.Bin, err)
+		return "", 0, util.NewError(_const.CommonException, _const.Bin, err)
 	}
 	var payload BinInfo
 	err = json.Unmarshal(content, &payload)
 	if err != nil {
-		return nil, util.NewError(_const.CommonException, _const.Bin, err)
+		return "", 0, util.NewError(_const.CommonException, _const.Bin, err)
 	}
 	// 初始化DllPackage类的name，dll
 	dll := DllPackage{
@@ -130,14 +137,15 @@ func (dllLoader *DllLoader) LoadPackage(dllPath string) (BinPackage, error) {
 		dllLoader.Dlls[dll.name] = make(map[int]*DllPackage)
 	}
 	dllLoader.Dlls[dll.name][dll.id] = &dll
-	return &dll, err
+	return dll.name, dll.id, err
 }
 
 // ReleasePackage 释放dll包
 // 传入：二进制执行包
 // 传出：无
-func (dllLoader *DllLoader) ReleasePackage(binPackage BinPackage) error {
-	err := (binPackage).Execute("Release", nil, 0)
+func (dllLoader *DllLoader) ReleasePackage(name string, id int) (err error) {
+	binPackage := dllLoader.Dlls[name][id]
+	err = (binPackage).Execute("Release", nil, 0)
 	//todo 常量化
 	if err != nil {
 		return util.NewError(_const.CommonException, _const.Bin, err)

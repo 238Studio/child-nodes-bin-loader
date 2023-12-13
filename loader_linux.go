@@ -1,4 +1,4 @@
-package so
+package loader
 
 import (
 	"errors"
@@ -8,7 +8,6 @@ import (
 
 	_const "github.com/238Studio/child-nodes-assist/const"
 	"github.com/238Studio/child-nodes-assist/util"
-	loader "github.com/238Studio/child-nodes-bin-loader"
 	jsoniter "github.com/json-iterator/go"
 )
 
@@ -95,6 +94,13 @@ func (so *SoPackage) Execute(method string, args []uintptr, re uintptr) (err err
 	return nil
 }
 
+// GetPackage 获取包
+// 传入：name，id
+// 传出：包
+func (soLoader *SoLoader) GetPackage(name string, id int) BinPackage {
+	return soLoader.Sos[name][id]
+}
+
 // LoadBinPackage 根据路径加在二进制包
 // 传入：路径
 // 传出：包对象,错误
@@ -124,7 +130,7 @@ func (soLoader *SoLoader) LoadPackage(path string) (name string, id int, err err
 
 	//解析描述文件
 	var (
-		payload loader.BinInfo
+		payload BinInfo
 		json    = jsoniter.ConfigCompatibleWithStandardLibrary
 	)
 	err = json.Unmarshal(content, &payload)
