@@ -59,6 +59,16 @@ type BinPackage interface {
 	// 传入：方法名，参数，返回值指针数组的指针
 	// 传出：错误
 	Execute(method string, args []uintptr, re uintptr) error
+
+	// GetIsPrimary 是否是primary包
+	// 传入：无
+	// 传出：bool
+	GetIsPrimary() bool
+
+	// GetTriggerCallArgs 获取触发器函数要求的传入的函数的返回值与传入这些函数的默认参数 GetTriggerCallArgs
+	// 传入：无
+	// 传出：调用表
+	GetTriggerCallArgs() *map[string]map[string][]string
 }
 
 // Parse
@@ -75,4 +85,8 @@ type BinInfo struct {
 	FunctionsReturnTypes map[string][]string
 	// info
 	Info map[string]string
+	// 是否是primary包
+	IsPrimary bool
+	// TriggerArgs
+	TriggerArgs map[string]map[string][]string
 }

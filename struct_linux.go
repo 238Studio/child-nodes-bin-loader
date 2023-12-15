@@ -4,13 +4,15 @@ import "plugin"
 
 // SoPackage so包结构
 type SoPackage struct {
-	name                 string              //包名。全局唯一。
-	id                   int                 //id
-	functions            []string            //支持的函数名称
-	functionsArgTypes    map[string][]string //函数入参类型 函数名-入参类型表
-	functionsReturnTypes map[string][]string //函数返回值类型 函数名-返回值类型表
-	info                 map[string]string   //其他信息
-	so                   *plugin.Plugin      //so对象
+	name                 string                          //包名。全局唯一。
+	id                   int                             //id
+	functions            []string                        //支持的函数名称
+	functionsArgTypes    map[string][]string             //函数入参类型 函数名-入参类型表
+	functionsReturnTypes map[string][]string             //函数返回值类型 函数名-返回值类型表
+	info                 map[string]string               //其他信息
+	so                   *plugin.Plugin                  //so对象
+	IsPrimary            bool                            // 是否是primary包
+	TriggerArgs          *map[string]map[string][]string // TriggerArgs
 }
 
 // SoLoader so加载器

@@ -18,6 +18,10 @@ type DllPackage struct {
 	info map[string]string
 	// dll包
 	dll *syscall.DLL
+	// 是否是primary包
+	IsPrimary bool
+	// TriggerArgs
+	TriggerArgs *map[string]map[string][]string
 }
 
 // DllLoader 加载dll包的结构体

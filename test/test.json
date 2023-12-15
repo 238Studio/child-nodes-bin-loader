@@ -1,4 +1,14 @@
 {
+  "IsPrimary":true,
+  "TriggerArgs":{
+    "package1":{
+      "function1":["arg0"]
+    },
+    "package2": {
+      "function2": ["arg1","arg2"]
+    }
+  }
+  ,
   "Functions": ["testFunc"],
   "FunctionsArgsTypes":{
     "testFunc":["string","string"]

@@ -94,6 +94,21 @@ func (so *SoPackage) Execute(method string, args []uintptr, re uintptr) (err err
 	return nil
 }
 
+// GetIsPrimary 是否是primary包
+// 传入：无
+// 传出：bool
+func (so *SoPackage) GetIsPrimary() bool {
+	return so.IsPrimary
+}
+
+// GetTriggerCallArgs 获取触发器函数要求的传入的函数的返回值与传入这些函数的默认参数 GetTriggerCallArgs
+// 传入：无
+// 传出：调用表
+
+func (so *SoPackage) GetTriggerCallArgs() *map[string]map[string][]string {
+	return so.TriggerArgs
+}
+
 // GetPackage 获取包
 // 传入：name，id
 // 传出：包
