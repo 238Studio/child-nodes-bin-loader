@@ -83,7 +83,17 @@ func (dll *DllPackage) Execute(method string, args []uintptr, re uintptr) error 
 		// 分别传入返回值指针和变量指针
 		_, _, err = proc.Call(re, uintptr(unsafe.Pointer(&args)))
 	}
-	return util.NewError(_const.CommonException, _const.Bin, err)
+	if !errors.Is(err, syscall.Errno(0)) && err != nil {
+		return util.NewError(_const.CommonException, _const.Bin, err)
+	}
+	return nil
+}
+
+// GetPackage 获取包
+// 传入：name，id
+// 传出：包
+func (dllLoader *DllLoader) GetPackage(name string, id int) BinPackage {
+	return dllLoader.Dlls[name][id]
 }
 
 // GetPackage 获取包
