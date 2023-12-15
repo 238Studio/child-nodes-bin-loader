@@ -162,6 +162,8 @@ func (soLoader *SoLoader) LoadPackage(path string) (name string, id int, err err
 		functionsReturnTypes: payload.FunctionsReturnTypes,
 		info:                 payload.Info,
 		so:                   so,
+		IsPrimary:            payload.IsPrimary,
+		TriggerArgs:          &payload.TriggerArgs,
 	}
 
 	//id分配
