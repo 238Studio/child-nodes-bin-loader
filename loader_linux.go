@@ -101,10 +101,9 @@ func (so *SoPackage) GetIsPrimary() bool {
 	return so.IsPrimary
 }
 
-// GetTriggerCallArgs 获取触发器函数要求的传入的函数的返回值与传入这些函数的默认参数 GetTriggerCallArgs
+// GetTriggerCallArgs 获取触发器函数要求的传入的函数的返回值与传入这些函数的默认参数
 // 传入：无
 // 传出：调用表
-
 func (so *SoPackage) GetTriggerCallArgs() *map[string]map[string][]string {
 	return so.TriggerArgs
 }
@@ -116,7 +115,7 @@ func (soLoader *SoLoader) GetPackage(name string, id int) BinPackage {
 	return soLoader.Sos[name][id]
 }
 
-// LoadBinPackage 根据路径加在二进制包
+// LoadPackage 根据路径加在二进制包
 // 传入：路径
 // 传出：包对象,错误
 func (soLoader *SoLoader) LoadPackage(path string) (name string, id int, err error) {
@@ -162,6 +161,8 @@ func (soLoader *SoLoader) LoadPackage(path string) (name string, id int, err err
 		functionsReturnTypes: payload.FunctionsReturnTypes,
 		info:                 payload.Info,
 		so:                   so,
+		IsPrimary:            payload.IsPrimary,
+		TriggerArgs:          &payload.TriggerArgs,
 	}
 
 	//id分配

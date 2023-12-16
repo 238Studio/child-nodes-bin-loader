@@ -18,4 +18,9 @@ func Test0(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
+
+	println(pa.GetInfo("test0"))
+	println(pa.GetIsPrimary())
+	trigger := pa.GetTriggerCallArgs()
+	println((*trigger)["package1"]["function1"][0])
 }
