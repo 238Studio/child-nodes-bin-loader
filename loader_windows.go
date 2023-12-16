@@ -69,7 +69,7 @@ func (dll *DllPackage) GetInfo(key string) (string, error) {
 // 传入：方法名，参数
 // 传出：返回值（通过指针）,错误
 // todo
-func (dll *DllPackage) Execute(method string, args []uintptr, re uintptr) error {
+func (dll *DllPackage) Execute(method string, args []uintptr, re uintptr, call *func(packageName, methodName string, args uintptr) (re uintptr)) error {
 	// 在dll中获得方法的句柄
 	proc, err := dll.dll.FindProc(method)
 	if err != nil {
@@ -81,7 +81,7 @@ func (dll *DllPackage) Execute(method string, args []uintptr, re uintptr) error 
 		_, _, err = proc.Call()
 	} else {
 		// 分别传入返回值指针和变量指针
-		_, _, err = proc.Call(re, uintptr(unsafe.Pointer(&args)))
+		_, _, err = proc.Call(uintptr(unsafe.Pointer(&args)), re, uintptr(unsafe.Pointer(call)))
 	}
 	if !errors.Is(err, syscall.Errno(0)) && err != nil {
 		return util.NewError(_const.CommonException, _const.Bin, err)
@@ -99,7 +99,6 @@ func (dll *DllPackage) GetIsPrimary() bool {
 // GetTriggerCallArgs 获取触发器函数要求的传入的函数的返回值与传入这些函数的默认参数 GetTriggerCallArgs
 // 传入：无
 // 传出：调用表
-
 func (dll *DllPackage) GetTriggerCallArgs() *map[string]map[string][]string {
 	return dll.TriggerArgs
 }
@@ -162,11 +161,11 @@ func (dllLoader *DllLoader) LoadPackage(path string) (name string, id int, err e
 }
 
 // ReleasePackage 释放dll包
-// 传入：二进制执行包
+// 传入：二进制执行包名称，id，调用管理器回调函数
 // 传出：无
-func (dllLoader *DllLoader) ReleasePackage(name string, id int) (err error) {
+func (dllLoader *DllLoader) ReleasePackage(name string, id int, call *func(packageName, methodName string, args uintptr) (re uintptr)) (err error) {
 	binPackage := dllLoader.Dlls[name][id]
-	err = (binPackage).Execute("Release", nil, 0)
+	err = (binPackage).Execute("Release", nil, 0, call)
 	//todo 常量化
 	if err != nil {
 		return util.NewError(_const.CommonException, _const.Bin, err)

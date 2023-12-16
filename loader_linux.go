@@ -68,7 +68,7 @@ func (so *SoPackage) GetInfo(key string) (string, error) {
 // Execute 执行函数
 // 传入：函数名，参数
 // 传出：返回值(通过指针)，错误
-func (so *SoPackage) Execute(method string, args []uintptr, re uintptr) (err error) {
+func (so *SoPackage) Execute(method string, args []uintptr, re uintptr, call *func(packageName, methodName string, args uintptr) (re uintptr)) (err error) {
 	//捕获panic
 	defer func() {
 		if er := recover(); er != nil {
@@ -88,7 +88,7 @@ func (so *SoPackage) Execute(method string, args []uintptr, re uintptr) (err err
 		ptr.(func())()
 	} else {
 		//如果有参数，则调用有参函数
-		ptr.(func(uintptr, uintptr))(uintptr(unsafe.Pointer(&args)), re)
+		ptr.(func(uintptr, uintptr))(uintptr(unsafe.Pointer(&args)), re, uintptr(unsafe.Pointer(call)))
 	}
 
 	return nil
@@ -185,7 +185,7 @@ func (soLoader *SoLoader) LoadPackage(path string) (name string, id int, err err
 // ReleasePackage 释放so包
 // 传入：二进制执行包
 // 传出：错误
-func (soLoader *SoLoader) ReleasePackage(name string, id int) (err error) {
+func (soLoader *SoLoader) ReleasePackage(name string, id int, call *func(packageName, methodName string, args uintptr) (re uintptr)) (err error) {
 	//捕获恐慌
 	defer func() {
 		if er := recover(); er != nil {
@@ -201,7 +201,7 @@ func (soLoader *SoLoader) ReleasePackage(name string, id int) (err error) {
 	}
 
 	//释放so package
-	err = soPackage.Execute("Release", nil, 0)
+	err = soPackage.Execute("Release", nil, 0, call)
 	if err != nil {
 		return util.NewError(_const.CommonException, _const.Bin, err)
 	}

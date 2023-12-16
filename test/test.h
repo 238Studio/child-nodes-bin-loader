@@ -79,7 +79,7 @@ extern __declspec(dllexport) void Test0();
 
 // Test1 测试go传入传出 和内部操作指针
 //
-extern __declspec(dllexport) GoUintptr Test1(GoUintptr re, GoUintptr args);
+extern __declspec(dllexport) GoUintptr Test1(GoUintptr re, GoUintptr args, GoUintptr call);
 
 #ifdef __cplusplus
 }

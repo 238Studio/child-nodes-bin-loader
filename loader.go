@@ -10,7 +10,7 @@ type Loader interface {
 	// ReleasePackage 释放dll包
 	// 传入：二进制执行包
 	// 传出：无
-	ReleasePackage(name string, id int) (err error)
+	ReleasePackage(name string, id int, call *func(packageName, methodName string, args uintptr) (re uintptr)) (err error)
 	// GetPackage 获取包
 	// 传入：name，id
 	// 传出：包
@@ -58,7 +58,7 @@ type BinPackage interface {
 	// Execute 执行函数
 	// 传入：方法名，参数，返回值指针数组的指针
 	// 传出：错误
-	Execute(method string, args []uintptr, re uintptr) error
+	Execute(method string, args []uintptr, re uintptr, call *func(packageName, methodName string, args uintptr) (re uintptr)) error
 
 	// GetIsPrimary 是否是primary包
 	// 传入：无
